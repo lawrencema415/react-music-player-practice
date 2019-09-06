@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import './MusicPlayer.css';
+import './App.css';
 class MusicPlayer extends Component {
   state = {
     songUrl:"https://spotify-clone.s3-us-west-1.amazonaws.com/Ozuna+-+Aura/14.+Unica.mp3",
-    isPlaying:false
+    isPlaying:false,
+    progress:0
   }
 
   togglePlay = () => {
@@ -16,7 +18,10 @@ class MusicPlayer extends Component {
   // }, 1000);
 
   setTime(e) {
-    console.log(e.clientX);
+    let progress = ((e.clientX - offsetLeftConvert(this.refs.progress_bar)) / this.refs.progress_bar.clientWidth);
+    // console.log(this.refs.progress_bar.offsetLeft,e.clientX,this.refs.progress_bar.clientWidth);
+    console.log(progress);
+    this.setState({progress:progress});
   }
 
   render() {
@@ -47,8 +52,8 @@ class MusicPlayer extends Component {
           <a href="#"><i className="fa fa-chevron-right" aria-hidden="true"></i></a>
         </div>
         <div className="progress" onClick={this.setTime.bind(this)}>
-          <div className="bar">
-          <div></div>
+          <div ref="progress_bar" className="bar">
+          <div style={{width: (this.state.progress * 100) + "%" }}></div>
           </div>
         </div>
 
@@ -61,8 +66,17 @@ class MusicPlayer extends Component {
   }
 };
 
+function offsetLeftConvert(el) {
+  let left = 0;
+  while(el && el !== document) {
+    left += el.offsetLeft;
+    el = el.offsetParent;
+  }
+  return left;
+}
+
 function classnames(obj) {
-  var css = [];
+  let css = [];
   Object.keys(obj).forEach( key => {
     if(obj[key]) {
       css.push(key)

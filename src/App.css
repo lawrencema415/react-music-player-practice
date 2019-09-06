@@ -1,9 +1,11 @@
+
 body {
   background: #0c84ff;
+
 }
 
-.app {
-  max-width: 600px;
+.App {
+  max-width:600px;
   width: 100%;
   margin: 20px auto;
 }
