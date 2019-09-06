@@ -1,0 +1,53 @@
+.player {
+  margin: 15px 0;
+  background: #282828;
+  width: 50%;
+  height: 50px;
+  position: relative;
+}
+
+.audio-controls > a {
+  text-decoration: none;
+  height: 50px;
+  box-sizing: border-box;
+  padding: 17px 10px;
+  text-align: center;
+  float:left;
+  color: #b3b3b3;
+  cursor: pointer;
+}
+
+.audio-controls >a:hover {
+  background-color: lightgreen;
+}
+
+.audio-controls {
+  float:left
+}
+
+.progress {
+  position: absolute;
+  left: 95.45px;
+  top: 15px;
+  right: 100px;
+  bottom: 20px;
+  background: #404040;
+  padding: 0 5px;
+}
+
+.progress > .bar {
+  position: absolute;
+  left: 1px;
+  top: 2px;
+  right: 1px;
+  bottom: 2px;
+}
+
+.progress > .bar > div {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  bottom: 0;
+  background: #B3B3B3;
+}
