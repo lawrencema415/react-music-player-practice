@@ -2,11 +2,27 @@ import React, {Component} from 'react';
 import './MusicPlayer.css';
 import './App.css';
 class MusicPlayer extends Component {
-  state = {
-    songUrl:"https://spotify-clone.s3-us-west-1.amazonaws.com/Ozuna+-+Aura/14.+Unica.mp3",
-    isPlaying:false,
-    progress:0,
-    dragProgressBar:false
+  constructor() {
+    super();
+    this.state = {
+      songUrl:"https://spotify-clone.s3-us-west-1.amazonaws.com/Ozuna+-+Aura/14.+Unica.mp3",
+      isPlaying:false,
+      progress:0,
+      dragProgressBar:false
+    }
+    this.progressInChange =  false;
+    this.interval = setInterval(this.updateProgress,250);
+  }
+
+  updateProgress = () => {
+    let player = this.refs.player;
+    if(this.refs.player) {
+      if(!this.progressInChange) {
+        this.setState({
+          progress: player.currentTime / player.duration
+        });
+      }
+    }
   }
 
   togglePlay = () => {
@@ -31,11 +47,14 @@ class MusicPlayer extends Component {
     if(this.state.dragProgressBar) {
       let progress = ((e.clientX - offsetLeftConvert(this.refs.progress_bar)) / this.refs.progress_bar.clientWidth);
       console.log(progress);
-      this.setState({progress:progress,dragProgressBar:true});
+      this.setState({progress:progress});
+      this.progressInChange = false
     }
   }
 
   render() {
+    let currenTime = 0;
+    let totalTime = 0;
     if(this.refs.player) {
       let player = this.refs.player;
       if(player.currentSrc !== this.state.songUrl) {
@@ -48,6 +67,11 @@ class MusicPlayer extends Component {
       } else if (!this.state.isPlaying) {
         player.pause();
       }
+      if(this.progressInChange) {
+        this.progressInChange = false;
+        player.currentTime = player.duration * this.state.progress;
+      }
+
     }
 
     let playerClassName = {
@@ -62,7 +86,7 @@ class MusicPlayer extends Component {
           <a onClick={this.togglePlay}><i className={classnames(playerClassName)} aria-hidden="true"></i></a>
           <a href="#"><i className="fa fa-chevron-right" aria-hidden="true"></i></a>
         </div>
-        <div className="progress" onMouseDown={this.progressBarActivate} onMouseMove={this.setTime} onMouseLeave={() => this.setState({dragProgressBar:false})} onMouseUp={this.stopDrag}>
+        <div className="progress" onMouseDown={this.progressBarActivate} onClick={this.setTime} onMouseMove={this.setTime} onMouseLeave={() => this.setState({dragProgressBar:false})} onMouseUp={this.stopDrag}>
           <div ref="progress_bar" className="bar">
           <div style={{width: (this.state.progress * 100) + "%" }}></div>
           </div>
