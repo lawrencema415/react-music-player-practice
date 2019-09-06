@@ -5,7 +5,8 @@ class MusicPlayer extends Component {
   state = {
     songUrl:"https://spotify-clone.s3-us-west-1.amazonaws.com/Ozuna+-+Aura/14.+Unica.mp3",
     isPlaying:false,
-    progress:0
+    progress:0,
+    dragProgressBar:false
   }
 
   togglePlay = () => {
@@ -17,11 +18,21 @@ class MusicPlayer extends Component {
   //   this.setState({songUrl:"https://spotify-clone.s3-us-west-1.amazonaws.com/Illenium+-+Ashes/07-Without+You+(feat.+SKYLR).mp3"})
   // }, 1000);
 
-  setTime(e) {
-    let progress = ((e.clientX - offsetLeftConvert(this.refs.progress_bar)) / this.refs.progress_bar.clientWidth);
-    // console.log(this.refs.progress_bar.offsetLeft,e.clientX,this.refs.progress_bar.clientWidth);
-    console.log(progress);
-    this.setState({progress:progress});
+  progressBarActivate = e => {
+    this.setState({dragProgressBar:true});
+    this.setTime(e);
+  }
+
+  stopDrag = e => {
+    this.setState({dragProgressBar:false});
+  }
+
+  setTime = (e) => {
+    if(this.state.dragProgressBar) {
+      let progress = ((e.clientX - offsetLeftConvert(this.refs.progress_bar)) / this.refs.progress_bar.clientWidth);
+      console.log(progress);
+      this.setState({progress:progress,dragProgressBar:true});
+    }
   }
 
   render() {
@@ -51,7 +62,7 @@ class MusicPlayer extends Component {
           <a onClick={this.togglePlay}><i className={classnames(playerClassName)} aria-hidden="true"></i></a>
           <a href="#"><i className="fa fa-chevron-right" aria-hidden="true"></i></a>
         </div>
-        <div className="progress" onClick={this.setTime.bind(this)}>
+        <div className="progress" onMouseDown={this.progressBarActivate} onMouseMove={this.setTime} onMouseLeave={() => this.setState({dragProgressBar:false})} onMouseUp={this.stopDrag}>
           <div ref="progress_bar" className="bar">
           <div style={{width: (this.state.progress * 100) + "%" }}></div>
           </div>
